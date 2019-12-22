@@ -605,6 +605,7 @@ void ekle(int plaka, char isim[30], char bolge[3], int komsuSayisi, int komsuPla
     memcpy(yeni->isim,isim,30);
     memcpy(yeni->bolge,bolge,3);
     yeni->komsuSayisi=komsuSayisi;
+    komsu->tutulanIl=plaka;
     komsu->komsuSay=komsuSayisi;
     for(i=0; i<komsu->komsuSay; i++)
     {
@@ -686,6 +687,8 @@ int main()
                 scanf("%d",&komsuPlaka[i]);
             }
             ekle(plaka,isim,bolge,komsuSayisi,komsuPlaka);
+             Sirala();
+            komsuSirala();
         }
         if(a==4)
         {
