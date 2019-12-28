@@ -1,0 +1,80 @@
+void bonus(int alt,int ust,char sehirler[][30],int boyut)
+{
+
+    int i,plaka,komsuSayisi,komsuPlaka[10],j;
+    char isim[30];
+    struct liste *dolas=ilk;
+    int sehirlerPlaka[boyut];
+
+
+    FILE *yaz;
+    yaz=fopen("OUTPUT.txt","a+");
+    struct komsu *komsu = ilkK;
+    for(i=0;i<boyut;i++)
+    {
+    struct liste *dolas2=ilk;
+    while(dolas2!=NULL)
+    {
+
+        if(strcmp(dolas2->isim,sehirler[i])==0)
+        {
+            sehirlerPlaka[i]=dolas2->plaka;
+            dolas2=dolas2->next;
+            break;
+        }
+
+        dolas2=dolas2->next;
+    }}
+
+    while(dolas!=NULL)
+    {
+        int sayac=0;
+        if(dolas->komsuSayisi>alt&&dolas->komsuSayisi<ust)
+        {
+            for(j=0;j<boyut;j++){
+            for(i=0; i<komsu->komsuSay; i++)
+            {
+                if(komsu->plaka[i]==sehirlerPlaka[j])
+                {
+                    sayac++;
+                }
+
+                if(sayac==boyut)
+                {
+                    printf("%s\n",dolas->isim);
+                    fprintf(yaz,"%s\n",dolas->isim);
+                    break;
+                }
+            }
+
+            }
+        }
+        komsu=komsu->next;
+
+        dolas=dolas->next;
+    }
+    printf("\n");
+    fprintf(yaz,"\n");
+
+
+
+}
+    if(a==7)
+        {
+            printf("Girilen sinirlar dahil degildir.\n");
+            printf("Alt siniri giriniz:\n");;
+            scanf("%d",&alt);
+            printf("Ust siniri giriniz:\n");
+            scanf("%d",&ust);
+            printf("Kac sehir girilecek:\n");
+            scanf("%d",&boyut);
+            char sehirler[boyut][30];
+            for(i=0;i<boyut;i++)
+            {
+            scanf("%s",sehirler[i]);
+
+            }
+            printf("Ortaklar:\n");
+            fprintf(yaz,"Ortaklar:\n");
+            bonus(alt,ust,sehirler,boyut);
+        }
