@@ -155,7 +155,7 @@ void komsuList()
     struct komsu *komsu = ilkK;
     struct komsu *gecici = ilkK;
     int i=0;
-    int a=99;
+
     while(gecici !=NULL)
     {
         for(i=0; i<10; i++)
@@ -367,6 +367,7 @@ void komsuKriter(int x)
     FILE *yaz;
     yaz=fopen("OUTPUT.txt","a+");
     fprintf(yaz,"\n##########KRITERE UYGUN ILLER##########\n");
+    fprintf(yaz,"Komsu sayisi %d den fazla olan ıller:\n",x);
     while(dolas!=NULL)
     {
         if(dolas->komsuSayisi>x)
@@ -391,6 +392,7 @@ void sehirAra(char c[30])
     FILE *yaz;
     yaz=fopen("OUTPUT.txt","a+");
     fprintf(yaz,"\n##########SEHIR ISMI ARAMA##########\n");
+    fprintf(yaz,"Bagli liste icinde aranan il: %s\n",c);
     struct komsu *komsu = ilkK;
     while(dolas!=NULL)
     {
@@ -462,6 +464,7 @@ void bolgeYaz(char c[3])
     FILE *yaz;
     yaz=fopen("OUTPUT.txt","a+");
     fprintf(yaz,"\n##########BOLGEDEKI ILLER##########\n");
+    fprintf(yaz,"%s bolgesindeki iller:\n",c);
     while(dolas!=NULL)
     {
         if(strcmp(c,dolas->bolge)==0)
@@ -491,6 +494,7 @@ int plakaAra(int a)
     yaz=fopen("OUTPUT.txt","a+");
     struct komsu *komsu = ilkK;
     fprintf(yaz,"\n##########PLAKA ARAMA##########\n");
+    fprintf(yaz,"Aranan ilin plakasi : %d\n",a);
     while(dolas!=NULL)
     {
 
@@ -533,8 +537,7 @@ int plakaAra(int a)
 
         dolas=dolas->next;
     }
-    return kontrol;
-    printf("\n");
+     printf("\n");
     fprintf(yaz,"\n");
     if(kontrol==0)
     {
@@ -557,11 +560,27 @@ int plakaAra(int a)
             ekle(plaka,isim,bolge,komsuSayisi,komsuPlaka);
         }
     }
-    return 0;
+    return kontrol;
+
+
 }
 void ekle(int plaka, char isim[30], char bolge[3], int komsuSayisi, int komsuPlaka[10])
 {
-    if(!plakaAra(plaka))
+    diziSirala(komsuPlaka,komsuSayisi);
+    int kontrol=0;
+    struct liste *dolas = ilk;
+     while(dolas!=NULL)
+    {
+
+        if(dolas->plaka==plaka)
+        {
+            kontrol=1;
+        }
+
+
+        dolas=dolas->next;
+    }
+    if(kontrol==0)
     {
         struct liste *yeni=(struct liste*) malloc(sizeof(struct liste));
         struct komsu *komsu=(struct komsu*) malloc(sizeof(struct komsu));
@@ -600,84 +619,98 @@ void ekle(int plaka, char isim[30], char bolge[3], int komsuSayisi, int komsuPla
             komsu->next=NULL;
             sonK=komsu;
         }
-    }
-    else
-        printf("###########SEHIR'E AIT PLAKA ZATEN LISTEDE VAR!##############\n\n");
-}
 
-void bonus(int alt,int ust,char sehir1[30],char sehir2[30])
+
+    }
+    else{
+        printf("####Sehir zaten listede var!#####\n");
+
+    }
+
+}
+void bonus(int alt,int ust,char sehirler[][30],int boyut)
 {
-    int i,plaka,komsuSayisi,komsuPlaka[10],s1,s2;
+
+    int i,plaka,komsuSayisi,komsuPlaka[10],j;
     char isim[30];
     struct liste *dolas=ilk;
+    int sehirlerPlaka[boyut];
 
-    struct liste *dolas2=ilk;
+
     FILE *yaz;
     yaz=fopen("OUTPUT.txt","a+");
+    fprintf(yaz,"##################BONUS#############\n");
+    fprintf(yaz,"ortaklar:\n");
     struct komsu *komsu = ilkK;
+    for(i=0;i<boyut;i++)
+    {
+    struct liste *dolas2=ilk;
     while(dolas2!=NULL)
     {
-        if(strcmp(dolas2->isim,sehir1)==0)
+
+        if(strcmp(dolas2->isim,sehirler[i])==0)
         {
-            s1=dolas2->plaka;
+            sehirlerPlaka[i]=dolas2->plaka;
+            dolas2=dolas2->next;
+            break;
         }
-        if(strcmp(dolas2->isim,sehir2)==0)
-        {
-            s2=dolas2->plaka;
-        }
+
         dolas2=dolas2->next;
-    }
+    }}
+
     while(dolas!=NULL)
     {
         int sayac=0;
         if(dolas->komsuSayisi>alt&&dolas->komsuSayisi<ust)
         {
-            for( i=0; i<komsu->komsuSay; i++)
+            for(j=0;j<boyut;j++){
+            for(i=0; i<komsu->komsuSay; i++)
             {
-                if(komsu->plaka[i]==s1)
+                if(komsu->plaka[i]==sehirlerPlaka[j])
                 {
                     sayac++;
                 }
-                if(komsu->plaka[i]==s2)
-                {
-                    sayac++;
-                }
-                if(sayac==2)
+
+                if(sayac==boyut)
                 {
                     printf("%s\n",dolas->isim);
+                    fprintf(yaz,"%s\n",dolas->isim);
                     break;
                 }
             }
+
+            }
         }
         komsu=komsu->next;
+
         dolas=dolas->next;
     }
     printf("\n");
     fprintf(yaz,"\n");
+
+
+
 }
 int main()
 {
-listeOku();
+     listeOku();
     komsuList();
     Sirala();
     komsuSirala();
     int a,x,b,i,plaka,plaka2,komsuSayisi,komsuPlaka[10],s;
-    int alt,ust;
+    int alt,ust,boyut;
     char bolge[3],bolge2[3],isim[30],sehir1[30],sehir2[30];
-
 
     while(1)
     {
-
-
         printf("1- Listede olan illeri ve bilgilerini ekrana yazar.\n");
         printf("2- Listeden sehir siler.\n");
         printf("3- Listeye sehir ekler.\n");
         printf("4- Komsu sayisina gore Il listeleme.\n");
         printf("5- Girilen bolgenin illerinin bilgilerini listeler\n");
         printf("6- Arama\n");
-        printf("7- Bonus\n");
-        printf("8- Programi sonlandirir.\n");
+        printf("7- Bonus.\n");
+        printf("8- Programi sonladirir.\n");
         scanf("%d",&a);
         if(a==1)
             printList();
@@ -703,9 +736,11 @@ listeOku();
             {
                 scanf("%d",&komsuPlaka[i]);
             }
+            diziSirala(komsuPlaka,komsuSayisi);
             ekle(plaka,isim,bolge,komsuSayisi,komsuPlaka);
-                Sirala();
-    komsuSirala();
+            Sirala();
+            komsuSirala();
+
         }
         if(a==4)
         {
@@ -734,9 +769,7 @@ listeOku();
                 printf("Aranan Sehrin Plakasi:");
                 scanf("%d",&plaka2);
                 plakaAra(plaka2);
-
             }
-
         }
         if(a==7)
         {
@@ -745,20 +778,22 @@ listeOku();
             scanf("%d",&alt);
             printf("Ust siniri giriniz:\n");
             scanf("%d",&ust);
-            printf("1.sehir:\n");
-            scanf("%s",&sehir1);
-            printf("2.sehir:\n");
-            scanf("%s",&sehir2);
-            printf("%d ve %d arasinda komsusu olan illerden %s ve %s  ortak komsular:\n",alt,ust,sehir1,sehir2);
-            bonus(alt,ust,sehir1,sehir2);
+            printf("Kac sehir girilecek:\n");
+            scanf("%d",&boyut);
+            char sehirler[boyut][30];
+            for(i=0;i<boyut;i++)
+            {
+            scanf("%s",sehirler[i]);
 
+            }
+            printf("Ortaklar:\n");
 
+            bonus(alt,ust,sehirler,boyut);
         }
         if(a==8)
         {
             exit(1);
         }
-
     }
     return 0;
 }
